@@ -11,6 +11,7 @@ import com.example.demo.repository.TestTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -64,20 +65,20 @@ public class TestService {
 
     @Transactional
     public Test createTest(Test newTest) {
-        //Test savedTest = new Test(newTest.getName());
 
         newTest = testRepository.save(newTest);
+
         List<PracticalTask> ptasks = newTest.getPracticalTasks();
-//        ptasks.forEach(task -> {practTaskRepository.save(new PracticalTask(task.getQuestion(),
-//                task.getValue(),newTest));});
+
         for(PracticalTask task:ptasks){
-            task.setPractTaskTest(newTest);
+            task.setPractTaskTest(newTest);   // TO DO!!!!!!!!!!!!!!
             practTaskService.createTask(task);
         }
 
         List<TestTask> ttasks = newTest.getTestTasks();
+
         for(TestTask task:ttasks){
-            task.setTestTaskTest(newTest);
+            task.setTestTaskTest(newTest);      // TO DO!!!!!!!!!!!!!!
             testTaskService.createTask(task);
         }
 

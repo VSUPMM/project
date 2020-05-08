@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.TaskNotFoundException;
+import com.example.demo.model.TestAnswer;
 import com.example.demo.model.TestTask;
 
 import com.example.demo.repository.TestTaskRepository;
@@ -18,13 +19,18 @@ public class TestTaskService {
 
     private TestTaskRepository repository;
 
-
     @Autowired
     public void setRepository(TestTaskRepository repository) {
         this.repository = repository;
     }
+    
+    private TestAnswerService answerSevice;
 
-
+    @Autowired
+    public void setRepository(TestAnswerService answerSevice) {
+        this.answerSevice = answerSevice;
+    }
+    
     @Transactional
     public void deleteTask(Long id) {
         repository.deleteById(id);
@@ -49,7 +55,16 @@ public class TestTaskService {
 
     @Transactional
     public TestTask createTask(TestTask newTask) {
+        
         newTask = repository.save(newTask);
+
+//        List<TestAnswer> answers = newTask.getAnswers();
+//
+//        for(TestAnswer answer :answers){
+//            answer.setTask(newTask);   // TO DO!!!!!!!!!!!!!!
+//            answerSevice.createAnswer(answer);
+//        }
+
         return newTask;
     }
 

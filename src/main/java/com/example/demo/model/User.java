@@ -35,9 +35,9 @@ public class User {
     @Column(name = "user_group")
     private String user_group;
 
-    @JsonManagedReference(value="user-movement")
-    @OneToMany(mappedBy="userId", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private List<TestResult> testResult;
+//    @JsonManagedReference(value="user-movement")
+//    @OneToMany(mappedBy="userId", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+//    private List<TestResult> testResult;
 
     public User() {
     }

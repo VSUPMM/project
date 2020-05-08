@@ -38,10 +38,10 @@ public class Test {
   @OneToMany(mappedBy="testTaskTest", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   private List<TestTask> testTasks ;
 
-
-  @JsonManagedReference(value="testResult-movement")
-  @OneToMany(mappedBy="testId", cascade = CascadeType.MERGE , fetch = FetchType.EAGER)
-  private List<TestResult> testResults ;
+//
+//  @JsonManagedReference(value="testResult-movement")
+//  @OneToMany(mappedBy="testId", cascade = CascadeType.MERGE , fetch = FetchType.EAGER)
+//  private List<TestResult> testResults ;
 
   public Test() {}
 

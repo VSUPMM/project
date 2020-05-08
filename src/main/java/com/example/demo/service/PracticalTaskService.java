@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.exception.TaskNotFoundException;
+import com.example.demo.model.PracticalAnswer;
 import com.example.demo.model.PracticalTask;
 
+import com.example.demo.repository.PracticalAnswerRepository;
 import com.example.demo.repository.PracticalTaskRepository;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -17,29 +20,35 @@ import java.util.Optional;
 public class PracticalTaskService {
 
     @Autowired
-    private PracticalTaskRepository repository;
-    
+    private PracticalTaskRepository taskRepository;
 
     @Autowired
-    public void setRepository(PracticalTaskRepository repository) {
-        this.repository = repository;
+    public void setRepository(PracticalTaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 
+    @Autowired
+    private PracticalAnswerService answerSevice;
+
+    @Autowired
+    public void setRepository(PracticalAnswerService answerSevice) {
+        this.answerSevice = answerSevice;
+    }
 
     @Transactional
     public void deleteTask(Long id) {
-        repository.deleteById(id);
+        taskRepository.deleteById(id);
     }
 
     @Transactional
     public List<PracticalTask> getAll() {
-        List<PracticalTask> taskEntities = repository.findAll();
+        List<PracticalTask> taskEntities = taskRepository.findAll();
         return taskEntities;
     }
 
     @Transactional
     public PracticalTask getById(Long id) {
-        Optional<PracticalTask> task = repository.findById(id);
+        Optional<PracticalTask> task = taskRepository.findById(id);
         if (task.isPresent()){
             return task.get();
         }
@@ -50,7 +59,14 @@ public class PracticalTaskService {
 
     @Transactional
     public PracticalTask createTask(PracticalTask newTask) {
-        newTask = repository.save(newTask);
+        newTask = taskRepository.save(newTask);
+
+        List<PracticalAnswer> answers = newTask.getAnswers();
+
+        for(PracticalAnswer answer :answers){
+            answer.setTask(newTask);   // TO DO!!!!!!!!!!!!!!
+            answerSevice.createAnswer(answer);
+        }
 
         return newTask;
     }
@@ -58,16 +74,16 @@ public class PracticalTaskService {
     @Transactional
     public PracticalTask updateTask(PracticalTask newPracticalTask, Long id) {
 
-        PracticalTask updatedPracticalTask = repository.findById(id)
+        PracticalTask updatedPracticalTask = taskRepository.findById(id)
                 .map(task -> {
                     task.setQuestion(newPracticalTask.getQuestion());
                     task.setValue(newPracticalTask.getValue());
                     task.setRightQuery(newPracticalTask.getRightQuery());
-                    return repository.save(task);
+                    return taskRepository.save(task);
                 })
                 .orElseGet(() -> {
                     newPracticalTask.setTaskId(id);
-                    return repository.save(newPracticalTask);
+                    return taskRepository.save(newPracticalTask);
                 });
 
 

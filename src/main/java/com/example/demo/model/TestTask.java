@@ -1,7 +1,10 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import com.vladmihalcea.hibernate.type.array.ListArrayType;
 import org.hibernate.annotations.TypeDef;
@@ -46,14 +49,21 @@ public class TestTask {
     @JoinColumn(name ="test_id")
     private Test testTaskTest;
 
+    @JsonManagedReference(value="TestAnswer-movement")
+    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(mappedBy="task", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<TestAnswer> answers ;
+
     public TestTask() {
     }
 
-    public TestTask(String question, Integer value, Test ftest) {
+    public TestTask(String question, Integer value, List<String> possibleAnswers,
+                    List<String> rightAnswers, Test testTaskTest) {
         this.question = question;
         this.value = value;
-        this.testTaskTest = ftest;
+        this.possibleAnswers = possibleAnswers;
+        this.rightAnswers = rightAnswers;
+        this.testTaskTest = testTaskTest;
     }
-
 }
 
